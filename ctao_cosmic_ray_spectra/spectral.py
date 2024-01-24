@@ -1,5 +1,5 @@
 # COPIED FROM https://github.com/cta-observatory/pyirf/blob/0059d3bceea126d014ba9efc953cb6470c37e7b0/pyirf/spectral.py
-# and included cone_solid_angle from utils
+# and further developed from it.
 """
 Functions and classes for calculating spectral weights
 """
@@ -186,6 +186,102 @@ class PowerLaw:
             e_ref=self.e_ref,
         )
 
+    @u.quantity_input(obstime=u.hour)
+    def integrate_time(self, obs_time):
+        """
+        Integrate this powerlaw over the given observation time.
+
+        Parameters
+        ----------
+        obs_time: astropy.units.Quantity[time]
+            Observation time to integrate the flux.
+
+        Returns
+        -------
+        integrated : PowerLaw
+            A new time integrated powerlaw instance.
+        """
+        return PowerLaw(
+            normalization=self.normalization * obs_time.to(u.s),
+            index=self.index,
+            e_ref=self.e_ref,
+        )
+
+    @u.quantity_input(area=u.m**2)
+    def integrate_area(self, area):
+        """
+        Integrate this powerlaw over the given observatory area.
+
+        Parameters
+        ----------
+        area: astropy.units.Quantity[area]
+            Observation time to integrate the flux.
+
+        Returns
+        -------
+        integrated : PowerLaw
+            A new area integrated powerlaw instance.
+        """
+        return PowerLaw(
+            normalization=self.normalization * area,
+            index=self.index,
+            e_ref=self.e_ref,
+        )
+
+    @u.quantity_input(energy=u.TeV)
+    def integrate_energy(self, energy):
+        """
+        Integrate this powerlaw over the given energy range.
+
+        Parameters
+        ----------
+        energy: tuple of astropy.units.Quantity[energy]
+            Energy range of integration (min, max).
+
+        Returns
+        -------
+        integrated : PowerLaw
+            A new area integrated powerlaw instance.
+        """
+
+        nominator = energy[1] ** (self.index + 1) - energy[0] ** (self.index + 1)
+        denominator = (self.index + 1) * self.e_ref**self.index
+
+        return nominator/denominator * self.normalization.unit
+
+    @u.quantity_input(inner=u.rad, outer=u.rad, obstime=u.hour, area=u.m**2, energy=u.TeV)
+    def derive_number_events(self,
+                             inner, outer,
+                             obs_time,
+                             area,
+                             energy):
+        """
+        Integrate all the quantities from the spectrum and derive the total number of events
+        expected for an integration in a region of space (inner, outer), in time (obs_time),
+        over the area of the observatory (area) and over an energy range (energy).
+
+        Paramaters
+        ----------
+        inner : astropy.units.Quantity[angle]
+            inner opening angle of cone
+        outer : astropy.units.Quantity[angle]
+            outer opening angle of cone
+        obs_time: astropy.units.Quantity[time]
+            Observation time to integrate the flux.
+        area: astropy.units.Quantity[area]
+            Observation time to integrate the flux.
+        energy: tuple of astropy.units.Quantity[energy]
+            Energy range of integration (min, max).
+
+        Returns
+        -------
+        float:
+            number of events integrated from the spectral distribution,
+        """
+        spectrum_cone = self.integrate_cone(inner, outer)
+        spectrum_time = spectrum_cone.integrate_time(obs_time)
+        spectrum_area = spectrum_time.integrate_area(area)
+        return spectrum_area.integrate_energy(energy)
 
 class LogParabola:
     r"""
