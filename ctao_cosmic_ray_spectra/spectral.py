@@ -231,7 +231,7 @@ class PowerLaw:
             A new area integrated powerlaw instance.
         """
         return PowerLaw(
-            normalization=(self.normalization * area.to(u.cm)),
+            normalization=(self.normalization * area.to(u.cm2)),
             index=self.index,
             e_ref=self.e_ref,
         )
