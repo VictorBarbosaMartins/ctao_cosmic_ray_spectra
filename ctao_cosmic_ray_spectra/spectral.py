@@ -215,7 +215,7 @@ class PowerLaw:
             e_ref=self.e_ref,
         )
 
-    @u.quantity_input(area=u.m**2)
+    @u.quantity_input(area=u.cm**2)
     def integrate_area(self, area):
         """
         Integrate this powerlaw over the given observatory area.
@@ -231,7 +231,7 @@ class PowerLaw:
             A new area integrated powerlaw instance.
         """
         return PowerLaw(
-            normalization=(self.normalization * area).decompose(),
+            normalization=(self.normalization * area),
             index=self.index,
             e_ref=self.e_ref,
         )
