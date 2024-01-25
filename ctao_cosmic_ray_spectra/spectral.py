@@ -173,14 +173,19 @@ class PowerLaw:
         integrated : PowerLaw
             A new powerlaw instance with new normalization with the integration
             result.
+
+        Raises
+        ------
+        ValueError:
+            if unit of normalization is wrong.
+            if outer not larger than inner.
         """
         if not self.normalization.unit.is_equivalent(DIFFUSE_FLUX_UNIT):
             raise ValueError("Can only integrate a diffuse flux over solid angle")
 
-        if (outer - inner).value > 0:
-            solid_angle = cone_solid_angle(outer) - cone_solid_angle(inner)
-        else:
-            solid_angle = 1
+        if not (outer - inner).value > 0:
+            raise ValueError
+        solid_angle = cone_solid_angle(outer) - cone_solid_angle(inner)
 
         return PowerLaw(
             normalization=self.normalization * solid_angle,
