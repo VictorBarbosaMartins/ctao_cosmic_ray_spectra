@@ -287,11 +287,8 @@ class PowerLaw:
             number of events integrated from the spectral distribution,
         """
         spectrum_cone = self.integrate_cone(inner, outer)
-        print(spectrum_cone)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
-        print(spectrum_time)
         spectrum_area = spectrum_time.integrate_area(area)
-        print(spectrum_area)
         return (spectrum_area.integrate_energy(energy)).decompose()
 
 class LogParabola:
