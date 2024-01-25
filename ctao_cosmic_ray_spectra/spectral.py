@@ -530,5 +530,5 @@ IRFDOC_ELECTRON_SPECTRUM = PowerLawWithExponentialGaussian(
 #: For higher energies we assume a
 #: flattening of the dF/dE*E^2.7 more or less in the middle of the large
 #: spread of the available data reported on the same proceeding.
-with as_file(files("cta_cosmic_ray_spectra") / "resources/dampe_p+he.ecsv") as _path:
+with as_file(files("ctao_cosmic_ray_spectra") / "resources/dampe_p+he.ecsv") as _path:
     DAMPE_P_He_SPECTRUM = TableInterpolationSpectrum.from_file(_path)
