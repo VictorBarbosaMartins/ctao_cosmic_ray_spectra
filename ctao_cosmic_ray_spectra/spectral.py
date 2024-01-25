@@ -36,7 +36,7 @@ __all__ = [
     "IRFDOC_PROTON_SPECTRUM",
     "IRFDOC_ELECTRON_SPECTRUM",
     "TableInterpolationSpectrum",
-    "DAMPE_P_He_SPECTRUM",
+    #"DAMPE_P_He_SPECTRUM",
 ]
 
 def cone_solid_angle(angle):
@@ -107,7 +107,8 @@ class PowerLaw:
 
     @u.quantity_input(
         normalization=[DIFFUSE_FLUX_UNIT, POINT_SOURCE_FLUX_UNIT, POINT_SOURCE_FLUX_UNIT * u.s ,
-                       POINT_SOURCE_FLUX_UNIT * u.s * u.m**2], e_ref=u.TeV
+                       POINT_SOURCE_FLUX_UNIT * u.s * u.m**2, POINT_SOURCE_FLUX_UNIT * u.m**2],
+        e_ref=u.TeV
     )
     def __init__(self, normalization, index, e_ref=1 * u.TeV):
         """Create a new PowerLaw spectrum"""
@@ -232,7 +233,7 @@ class PowerLaw:
             A new area integrated powerlaw instance.
         """
         return PowerLaw(
-            normalization=self.normalization * area,
+            normalization=(self.normalization * area).decompose(),
             index=self.index,
             e_ref=self.e_ref,
         )
@@ -288,6 +289,7 @@ class PowerLaw:
             number of events integrated from the spectral distribution,
         """
         spectrum_cone = self.integrate_cone(inner, outer)
+        print(spectrum_cone)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
         spectrum_area = spectrum_time.integrate_area(area)
         return (spectrum_area.integrate_energy(energy)).decompose()
