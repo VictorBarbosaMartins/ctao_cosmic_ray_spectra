@@ -106,8 +106,6 @@ class PowerLaw:
     """
 
     @u.quantity_input(
-        normalization=[DIFFUSE_FLUX_UNIT, POINT_SOURCE_FLUX_UNIT, POINT_SOURCE_FLUX_UNIT * u.s ,
-                       POINT_SOURCE_FLUX_UNIT * u.s * u.m**2, POINT_SOURCE_FLUX_UNIT * u.m**2],
         e_ref=u.TeV
     )
     def __init__(self, normalization, index, e_ref=1 * u.TeV):
