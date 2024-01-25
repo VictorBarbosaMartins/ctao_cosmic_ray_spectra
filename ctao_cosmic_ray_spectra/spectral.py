@@ -255,7 +255,7 @@ class PowerLaw:
         nominator = energy[1] ** (self.index + 1) - energy[0] ** (self.index + 1)
         denominator = (self.index + 1) * self.e_ref**self.index
 
-        return nominator/denominator * self.normalization.unit
+        return nominator/denominator * self.normalization
 
     @u.quantity_input(inner=u.rad, outer=u.rad, obstime=u.hour, area=u.m**2, energy=u.TeV)
     def derive_number_events(self,
