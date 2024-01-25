@@ -136,10 +136,11 @@ class PowerLaw:
         viewcone_min = simulated_event_info.viewcone_min
         viewcone_max = simulated_event_info.viewcone_max
 
-        solid_angle = cone_solid_angle(viewcone_max) - cone_solid_angle(viewcone_min)
         if (viewcone_max - viewcone_min).value > 0:
+            solid_angle = cone_solid_angle(viewcone_max) - cone_solid_angle(viewcone_min)
             unit = DIFFUSE_FLUX_UNIT
         else:
+            solid_angle = 1
             unit = POINT_SOURCE_FLUX_UNIT
 
         A = np.pi * simulated_event_info.max_impact**2
