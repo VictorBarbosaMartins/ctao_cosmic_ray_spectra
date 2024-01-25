@@ -290,7 +290,7 @@ class PowerLaw:
         spectrum_cone = self.integrate_cone(inner, outer)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
         spectrum_area = spectrum_time.integrate_area(area)
-        return spectrum_area.integrate_energy(energy)
+        return (spectrum_area.integrate_energy(energy)).decompose()
 
 class LogParabola:
     r"""
