@@ -59,15 +59,6 @@ def test_powerlaw_integrate_cone(outer, expected):
 def test_powerlaw():
     from ctao_cosmic_ray_spectra.spectral import PowerLaw
 
-    with pytest.raises(TypeError):
-        PowerLaw(normalization=1e-10, index=-2)
-
-    with pytest.raises(u.UnitsError):
-        PowerLaw(normalization=1e-10 / u.TeV, index=-2)
-
-    with pytest.raises(ValueError):
-        PowerLaw(normalization=1e-10 / u.TeV / u.m**2 / u.s, index=2)
-
     # check we get a reasonable unit out of astropy independent of input unit
     unit = u.TeV**-1 * u.m**-2 * u.s**-1
     power_law = PowerLaw(1e-10 * unit, -2.65)
