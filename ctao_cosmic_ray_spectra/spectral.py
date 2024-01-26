@@ -15,26 +15,26 @@ from scipy.interpolate import interp1d
 #: Unit of a point source flux
 #:
 #: Number of particles per Energy, time and area
-POINT_SOURCE_FLUX_UNIT = (1 / u.TeV / u.s / u.m**2).unit
+point_source_flux_unit = (1 / u.TeV / u.s / u.m**2).unit
 
 #: Unit of a diffuse flux
 #:
 #: Number of particles per Energy, time, area and solid_angle
-DIFFUSE_FLUX_UNIT = POINT_SOURCE_FLUX_UNIT / u.sr
+diffuse_flux_unit = point_source_flux_unit / u.sr
 
 
 __all__ = [
-    "POINT_SOURCE_FLUX_UNIT",
-    "DIFFUSE_FLUX_UNIT",
+    "point_source_flux_unit",
+    "diffuse_flux_unit",
     "calculate_event_weights",
     "PowerLaw",
     "LogParabola",
     "PowerLawWithExponentialGaussian",
-    "CRAB_HEGRA",
-    "CRAB_MAGIC_JHEAP2015",
-    "PDG_ALL_PARTICLE",
-    "IRFDOC_PROTON_SPECTRUM",
-    "IRFDOC_ELECTRON_SPECTRUM",
+    "crab_hegra",
+    "crab_magic_jheap2015",
+    "pdg_all_particle",
+    "irfdoc_proton_spectrum",
+    "irfdoc_electron_spectrum",
     "TableInterpolationSpectrum",
     #"DAMPE_P_He_SPECTRUM",
 ]
@@ -138,10 +138,10 @@ class PowerLaw:
 
         if (viewcone_max - viewcone_min).value > 0:
             solid_angle = cone_solid_angle(viewcone_max) - cone_solid_angle(viewcone_min)
-            unit = DIFFUSE_FLUX_UNIT
+            unit = diffuse_flux_unit
         else:
             solid_angle = 1
-            unit = POINT_SOURCE_FLUX_UNIT
+            unit = point_source_flux_unit
 
         A = np.pi * simulated_event_info.max_impact**2
 
@@ -181,7 +181,7 @@ class PowerLaw:
             if unit of normalization is wrong.
             if outer not larger than inner.
         """
-        if not self.normalization.unit.is_equivalent(DIFFUSE_FLUX_UNIT):
+        if not self.normalization.unit.is_equivalent(diffuse_flux_unit):
             raise ValueError("Can only integrate a diffuse flux over solid angle")
 
         if not (outer - inner).value > 0:
@@ -315,7 +315,7 @@ class LogParabola:
     """
 
     @u.quantity_input(
-        normalization=[DIFFUSE_FLUX_UNIT, POINT_SOURCE_FLUX_UNIT], e_ref=u.TeV
+        normalization=[diffuse_flux_unit, point_source_flux_unit], e_ref=u.TeV
     )
     def __init__(self, normalization, a, b, e_ref=1 * u.TeV):
         """Create a new LogParabola spectrum"""
@@ -373,7 +373,7 @@ class PowerLawWithExponentialGaussian(PowerLaw):
     """
 
     @u.quantity_input(
-        normalization=[DIFFUSE_FLUX_UNIT, POINT_SOURCE_FLUX_UNIT], e_ref=u.TeV
+        normalization=[diffuse_flux_unit, point_source_flux_unit], e_ref=u.TeV
     )
     def __init__(self, normalization, index, e_ref, f, mu, sigma):
         """Create a new PowerLawWithExponentialGaussian spectrum"""
@@ -471,7 +471,7 @@ class TableInterpolationSpectrum:
 #: From "The Crab Nebula and Pulsar between 500 GeV and 80 TeV: Observations with the HEGRA stereoscopic air Cherenkov telescopes",
 #: Aharonian et al, 2004, ApJ 614.2
 #: doi.org/10.1086/423931
-CRAB_HEGRA = PowerLaw(
+crab_hegra = PowerLaw(
     normalization=2.83e-11 / (u.TeV * u.cm**2 * u.s),
     index=-2.62,
     e_ref=1 * u.TeV,
@@ -482,7 +482,7 @@ CRAB_HEGRA = PowerLaw(
 #: From "Measurement of the Crab Nebula spectrum over three decades in energy with the MAGIC telescopes",
 #: Aleksìc et al., 2015, JHEAP
 #: https://doi.org/10.1016/j.jheap.2015.01.002
-CRAB_MAGIC_JHEAP2015 = LogParabola(
+crab_magic_jheap2015 = LogParabola(
     normalization=3.23e-11 / (u.TeV * u.cm**2 * u.s),
     a=-2.47,
     b=-0.24,
@@ -493,7 +493,7 @@ CRAB_MAGIC_JHEAP2015 = LogParabola(
 #:
 #: (30.2) from "The Review of Particle Physics (2020)"
 #: https://pdg.lbl.gov/2020/reviews/rpp2020-rev-cosmic-rays.pdf
-PDG_ALL_PARTICLE = PowerLaw(
+pdg_all_particle = PowerLaw(
     normalization=1.8e4 / (u.GeV * u.m**2 * u.s * u.sr),
     index=-2.7,
     e_ref=1 * u.GeV,
@@ -503,7 +503,7 @@ PDG_ALL_PARTICLE = PowerLaw(
 #:
 #: From "Description of CTA Instrument Response Functions (Production 3b Simulation)", section 4.3.1
 #: https://gitlab.cta-observatory.org/cta-consortium/aswg/documentation/internal_reports/irfs-reports/prod3b-irf-description
-IRFDOC_PROTON_SPECTRUM = PowerLaw(
+irfdoc_proton_spectrum = PowerLaw(
     normalization=9.8e-6 / (u.cm**2 * u.s * u.TeV * u.sr),
     index=-2.62,
     e_ref=1 * u.TeV,
@@ -513,7 +513,7 @@ IRFDOC_PROTON_SPECTRUM = PowerLaw(
 #:
 #: From "Description of CTA Instrument Response Functions (Production 3b Simulation)", section 4.3.1
 #: https://gitlab.cta-observatory.org/cta-consortium/aswg/documentation/internal_reports/irfs-reports/prod3b-irf-description
-IRFDOC_ELECTRON_SPECTRUM = PowerLawWithExponentialGaussian(
+irfdoc_electron_spectrum = PowerLawWithExponentialGaussian(
     normalization=2.385e-9 / (u.TeV * u.cm**2 * u.s * u.sr),
     index=-3.43,
     e_ref=1 * u.TeV,
