@@ -106,9 +106,7 @@ class PowerLaw:
         :math:`E_\text{ref}`
     """
 
-    @u.quantity_input(
-        e_ref=u.TeV
-    )
+    @u.quantity_input(e_ref=u.TeV)
     def __init__(self, normalization, index, e_ref=1 * u.TeV):
         """Create a new PowerLaw spectrum"""
         if index > 0:
@@ -182,7 +180,7 @@ class PowerLaw:
             if unit of normalization is wrong.
             if outer not larger than inner.
         """
-        if not self.normalization.unit.is_equivalent(diffuse_flux_unit):
+        if 'sr' not in str(self.normalization.unit):
             raise ValueError("Can only integrate a diffuse flux over solid angle")
 
         if not (outer - inner).value > 0:
