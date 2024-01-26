@@ -10,6 +10,6 @@ setup(
         "importlib",
         "scipy",
         "pytest"
-        "setuptools"
+        'setuptools>=40.0',
     ],
 )
