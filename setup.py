@@ -9,5 +9,6 @@ setup(
         "astropy",
         "importlib",
         "scipy",
+        "pytest"
     ],
 )
