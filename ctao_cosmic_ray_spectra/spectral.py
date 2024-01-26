@@ -193,7 +193,7 @@ class PowerLaw:
             e_ref=self.e_ref,
         )
 
-    @u.quantity_input(obstime=u.hour)
+    @u.quantity_input(obstime=u.s)
     def integrate_time(self, obs_time):
         """
         Integrate this powerlaw over the given observation time.
@@ -209,7 +209,7 @@ class PowerLaw:
             A new time integrated powerlaw instance.
         """
         return PowerLaw(
-            normalization=self.normalization * obs_time.to(u.s),
+            normalization=self.normalization * obs_time,
             index=self.index,
             e_ref=self.e_ref,
         )
@@ -230,7 +230,7 @@ class PowerLaw:
             A new area integrated powerlaw instance.
         """
         return PowerLaw(
-            normalization=(self.normalization * area.to(u.cm**2)),
+            normalization=(self.normalization * area),
             index=self.index,
             e_ref=self.e_ref,
         )
@@ -256,7 +256,7 @@ class PowerLaw:
 
         return nominator/denominator * self.normalization
 
-    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.hour, area=u.m**2, energy=u.TeV)
+    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy=u.TeV)
     def derive_number_events(self,
                              inner, outer,
                              obs_time,
