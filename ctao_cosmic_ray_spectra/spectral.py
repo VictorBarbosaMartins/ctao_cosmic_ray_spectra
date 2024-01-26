@@ -39,6 +39,7 @@ __all__ = [
     #"DAMPE_P_He_SPECTRUM",
 ]
 
+@u.quantity_input(angle=u.deg)
 def cone_solid_angle(angle):
     """Calculate the solid angle of a view cone.
 
@@ -53,7 +54,7 @@ def cone_solid_angle(angle):
         Solid angle of a view cone with opening angle ``angle``.
 
     """
-    solid_angle = 2 * np.pi * (1 - np.cos(angle)) * u.sr
+    solid_angle = 2 * np.pi * (1 - np.cos(angle.to(u.rad))) * u.sr
     return solid_angle
 
 @u.quantity_input(true_energy=u.TeV)
@@ -186,7 +187,7 @@ class PowerLaw:
 
         if not (outer - inner).value > 0:
             raise ValueError
-        solid_angle = cone_solid_angle(outer.to(u.rad)) - cone_solid_angle(inner.to(u.rad))
+        solid_angle = cone_solid_angle(outer) - cone_solid_angle(inner)
 
         return PowerLaw(
             normalization=self.normalization * solid_angle,
