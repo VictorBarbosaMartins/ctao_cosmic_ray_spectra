@@ -158,7 +158,7 @@ class PowerLaw:
     def __repr__(self):
         return f"{self.__class__.__name__}({self.normalization} * (E / {self.e_ref})**{self.index})"
 
-    @u.quantity_input(inner=u.rad, outer=u.rad)
+    @u.quantity_input(inner=u.deg, outer=u.deg)
     def integrate_cone(self, inner, outer):
         """Integrate this powerlaw over solid angle in the given cone
 
@@ -186,7 +186,7 @@ class PowerLaw:
 
         if not (outer - inner).value > 0:
             raise ValueError
-        solid_angle = cone_solid_angle(outer) - cone_solid_angle(inner)
+        solid_angle = cone_solid_angle(outer.to(u.rad)) - cone_solid_angle(inner.to(u.rad))
 
         return PowerLaw(
             normalization=self.normalization * solid_angle,
@@ -257,7 +257,7 @@ class PowerLaw:
 
         return nominator/denominator * self.normalization
 
-    @u.quantity_input(inner=u.rad, outer=u.rad, obstime=u.hour, area=u.m**2, energy=u.TeV)
+    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.hour, area=u.m**2, energy=u.TeV)
     def derive_number_events(self,
                              inner, outer,
                              obs_time,
