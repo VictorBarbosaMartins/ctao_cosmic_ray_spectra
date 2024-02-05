@@ -289,7 +289,7 @@ class PowerLaw:
         """
         spectrum_cone = self.integrate_cone(inner, outer)
         spectrum_area = spectrum_cone.integrate_area(area)
-        return (spectrum_area.integrate_energy(energy_min, energy_max).decompose()
+        return (spectrum_area.integrate_energy(energy_min, energy_max).decompose())
 
     @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy=u.TeV)
     def derive_number_events(self,
