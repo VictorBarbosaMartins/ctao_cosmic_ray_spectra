@@ -255,6 +255,38 @@ class PowerLaw:
 
         return nominator/denominator * self.normalization
 
+    @u.quantity_input(inner=u.deg, outer=u.deg, area=u.cm**2, energy=u.TeV)
+    def derive_events_rate(self,
+                             inner, outer,
+                             area,
+                             energy):
+        """
+        Integrate all the quantities from the spectrum (except time)and derive the events rate
+        expected for an integration in a region of space (inner, outer), over the area of the
+        observatory (area) and over an energy range (energy).
+
+        Paramaters
+        ----------
+        inner : astropy.units.Quantity[angle]
+            inner opening angle of cone
+        outer : astropy.units.Quantity[angle]
+            outer opening angle of cone
+        obs_time: astropy.units.Quantity[time]
+            Observation time to integrate the flux.
+        area: astropy.units.Quantity[area]
+            Observation time to integrate the flux.
+        energy: tuple of astropy.units.Quantity[energy]
+            Energy range of integration (min, max).
+
+        Returns
+        -------
+        float:
+            events rate integrated from the spectral distribution.
+        """
+        spectrum_cone = self.integrate_cone(inner, outer)
+        spectrum_area = spectrum_cone.integrate_area(area)
+        return (spectrum_area.integrate_energy(energy)).decompose()
+
     @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy=u.TeV)
     def derive_number_events(self,
                              inner, outer,
@@ -282,12 +314,11 @@ class PowerLaw:
         Returns
         -------
         float:
-            number of events integrated from the spectral distribution,
+            number of events integrated from the spectral distribution.
         """
-        spectrum_cone = self.integrate_cone(inner, outer)
+        spectrum_cone = self.derive_events_rate(inner, outer, area, energy)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
-        spectrum_area = spectrum_time.integrate_area(area)
-        return (spectrum_area.integrate_energy(energy)).decompose()
+        return spectrum_time.decompose()
 
 class LogParabola:
     r"""
