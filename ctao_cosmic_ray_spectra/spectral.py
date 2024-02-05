@@ -3,6 +3,7 @@
 """
 Functions and classes for calculating spectral weights
 """
+import logging
 import sys
 from importlib.resources import as_file, files
 
@@ -174,14 +175,12 @@ class PowerLaw:
             A new powerlaw instance with new normalization with the integration
             result.
 
-        Raises
-        ------
-        ValueError:
-            if unit of normalization is wrong.
-            if outer not larger than inner.
         """
         if 'sr' not in str(self.normalization.unit):
-            raise ValueError("Can only integrate a diffuse flux over solid angle")
+            msg = "Can only integrate a diffuse flux over solid angle." \
+                  "Proceeding without integration."
+            logging.warning(msg)
+            return self
 
         if not (outer - inner).value > 0:
             raise ValueError
