@@ -298,7 +298,8 @@ class PowerLaw:
                              inner, outer,
                              obs_time,
                              area,
-                             energy):
+                             energy_min,
+                             energy_max):
         """
         Integrate all the quantities from the spectrum and derive the total number of events
         expected for an integration in a region of space (inner, outer), in time (obs_time),
@@ -314,15 +315,17 @@ class PowerLaw:
             Observation time to integrate the flux.
         area: astropy.units.Quantity[area]
             Observation time to integrate the flux.
-        energy: tuple of astropy.units.Quantity[energy]
-            Energy range of integration (min, max).
+        energy_min: astropy.units.Quantity[energy]
+            Minimum energy in the integration.
+        energy_max: astropy.units.Quantity[energy]
+            Maximum energy in the integration.
 
         Returns
         -------
         float:
             number of events integrated from the spectral distribution.
         """
-        spectrum_cone = self.derive_events_rate(inner, outer, area, energy)
+        spectrum_cone = self.derive_events_rate(inner, outer, area, energy_min, energy_max)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
         return spectrum_time.decompose(bases=[u.m, u.TeV, u.s, u.sr])
 
