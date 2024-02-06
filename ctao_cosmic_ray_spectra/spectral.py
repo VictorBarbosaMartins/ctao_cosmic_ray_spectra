@@ -274,8 +274,6 @@ class PowerLaw:
             inner opening angle of cone
         outer : astropy.units.Quantity[angle]
             outer opening angle of cone
-        obs_time: astropy.units.Quantity[time]
-            Observation time to integrate the flux.
         area: astropy.units.Quantity[area]
             Observation time to integrate the flux.
         energy_min: astropy.units.Quantity[energy]
@@ -291,7 +289,7 @@ class PowerLaw:
         spectrum_cone = self.integrate_cone(inner, outer)
         spectrum_area = spectrum_cone.integrate_area(area)
         return (spectrum_area.integrate_energy(energy_min, energy_max).decompose(
-            bases=[u.m, u.TeV, u.s, u.sr]))
+            bases=[u.cm, u.TeV, u.s, u.sr]))
 
     @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2,
                       energy_min=u.TeV, energy_max=u.TeV)
