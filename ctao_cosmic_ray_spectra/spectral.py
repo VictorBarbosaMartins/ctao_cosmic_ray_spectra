@@ -282,6 +282,7 @@ class PowerLaw:
             Minimum energy in the integration.
         energy_max: astropy.units.Quantity[energy]
             Maximum energy in the integration.
+
         Returns
         -------
         float:
@@ -289,7 +290,8 @@ class PowerLaw:
         """
         spectrum_cone = self.integrate_cone(inner, outer)
         spectrum_area = spectrum_cone.integrate_area(area)
-        return (spectrum_area.integrate_energy(energy_min, energy_max).decompose())
+        return (spectrum_area.integrate_energy(energy_min, energy_max).decompose(
+            bases=[u.m, u.TeV, u.s, u.sr]))
 
     @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy=u.TeV)
     def derive_number_events(self,
@@ -322,7 +324,7 @@ class PowerLaw:
         """
         spectrum_cone = self.derive_events_rate(inner, outer, area, energy)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
-        return spectrum_time.decompose()
+        return spectrum_time.decompose(bases=[u.m, u.TeV, u.s, u.sr])
 
 class LogParabola:
     r"""
