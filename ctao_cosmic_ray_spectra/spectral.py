@@ -234,7 +234,7 @@ class PowerLaw:
             e_ref=self.e_ref,
         )
 
-    @u.quantity_input(energy_min=u.TeV, energy_max=u.TeV)
+    @u.quantity_input(energy_min=u.TeV,energy_max=u.TeV)
     def integrate_energy(self, energy_min, energy_max):
         """
         Integrate this powerlaw over the given energy range.
@@ -255,11 +255,7 @@ class PowerLaw:
         nominator = energy_max ** (self.index + 1) - energy_min ** (self.index + 1)
         denominator = (self.index + 1) * self.e_ref**self.index
 
-        return PowerLaw(
-                normalization=(nominator/denominator * self.normalization),
-                index=self.index,
-                e_ref=self.e_ref,
-            )
+        return nominator/denominator * self.normalization
 
     @u.quantity_input(inner=u.deg, outer=u.deg, area=u.cm**2, energy_min=u.TeV, energy_max=u.TeV)
     def derive_events_rate(self,
@@ -294,10 +290,11 @@ class PowerLaw:
         """
         spectrum_cone = self.integrate_cone(inner, outer)
         spectrum_area = spectrum_cone.integrate_area(area)
-        return spectrum_area.integrate_energy(energy_min, energy_max)
+        return (spectrum_area.integrate_energy(energy_min, energy_max).decompose(
+            bases=[u.m, u.TeV, u.s, u.sr]))
 
-    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy_min=u.TeV,
-                      energy_max=u.TeV)
+    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2,
+                      energy_min=u.TeV, energy_max=u.TeV)
     def derive_number_events(self,
                              inner, outer,
                              obs_time,
@@ -331,7 +328,7 @@ class PowerLaw:
         """
         spectrum_cone = self.derive_events_rate(inner, outer, area, energy_min, energy_max)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
-        return spectrum_time
+        return spectrum_time.decompose(bases=[u.m, u.TeV, u.s, u.sr])
 
 class LogParabola:
     r"""
