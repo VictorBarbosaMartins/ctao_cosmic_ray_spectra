@@ -234,7 +234,7 @@ class PowerLaw:
             e_ref=self.e_ref,
         )
 
-    @u.quantity_input(energy=u.TeV)
+    @u.quantity_input(energy_min=u.TeV, energy_max=u.TeV)
     def integrate_energy(self, energy_min, energy_max):
         """
         Integrate this powerlaw over the given energy range.
@@ -297,7 +297,8 @@ class PowerLaw:
         return (spectrum_area.integrate_energy(energy_min, energy_max).decompose(
             bases=[u.m, u.TeV, u.s, u.sr]))
 
-    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy=u.TeV)
+    @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy_min=u.TeV,
+                      energy_max=u.TeV)
     def derive_number_events(self,
                              inner, outer,
                              obs_time,
