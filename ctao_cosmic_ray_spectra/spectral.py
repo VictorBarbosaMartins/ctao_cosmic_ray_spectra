@@ -294,8 +294,7 @@ class PowerLaw:
         """
         spectrum_cone = self.integrate_cone(inner, outer)
         spectrum_area = spectrum_cone.integrate_area(area)
-        return (spectrum_area.integrate_energy(energy_min, energy_max).decompose(
-            bases=[u.m, u.TeV, u.s, u.sr]))
+        return spectrum_area.integrate_energy(energy_min, energy_max)
 
     @u.quantity_input(inner=u.deg, outer=u.deg, obstime=u.s, area=u.cm**2, energy_min=u.TeV,
                       energy_max=u.TeV)
@@ -332,7 +331,7 @@ class PowerLaw:
         """
         spectrum_cone = self.derive_events_rate(inner, outer, area, energy_min, energy_max)
         spectrum_time = spectrum_cone.integrate_time(obs_time)
-        return spectrum_time.decompose(bases=[u.m, u.TeV, u.s, u.sr])
+        return spectrum_time
 
 class LogParabola:
     r"""
