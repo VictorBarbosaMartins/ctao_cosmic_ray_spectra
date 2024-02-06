@@ -255,7 +255,11 @@ class PowerLaw:
         nominator = energy_max ** (self.index + 1) - energy_min ** (self.index + 1)
         denominator = (self.index + 1) * self.e_ref**self.index
 
-        return nominator/denominator * self.normalization
+        return PowerLaw(
+                normalization=(nominator/denominator * self.normalization),
+                index=self.index,
+                e_ref=self.e_ref,
+            )
 
     @u.quantity_input(inner=u.deg, outer=u.deg, area=u.cm**2, energy_min=u.TeV, energy_max=u.TeV)
     def derive_events_rate(self,
